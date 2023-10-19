@@ -1,0 +1,88 @@
+#include <list>
+#include <iostream>
+#include <vector>
+
+const int tamanho_Nivel_1 = 10;
+const int tamanho_Nivel_2 = 10;
+
+using std::cout;
+using std::endl;
+
+// Funcao hash de nível 1
+int hash_Nivel_1(int chave) {
+    return chave % tamanhoNivel1;
+}
+
+// Funcao hash de nível 2
+int hash_Nivel_2(int chave) {
+    return chave % tamanhoNivel2;
+}
+
+class Tabela_Hash {
+private:
+    std::vector<std::vector<std::list<std::pair<int, int>>> > tabela;
+
+public:
+    Tabela_Hash() {
+        tabela.resize(tamanho_Nivel_1);
+        for (int i = 0; i < tamanho_Nivel_1; i++) {
+            tabela[i].resize(tamanho_Nivel_2);
+        }
+    }
+
+    // Funcao buscar
+    int encontrar(int chave) {
+        int primeiro_Indice = hash_Nivel_1(chave);
+        int segundo_Indice = hash_Nivel_2(chave);
+
+        for (const auto &item : tabela[primeiro_Indice][segundo_Indice]) {
+            if (item.first == chave) {
+                return item.second;
+            }
+        }
+
+        return -1;
+    }
+
+    // Funcao inserir
+    void inserir(int chave, int valor) {
+        int primeiro_Indice = hash_Nivel_1(chave);
+        int segundo_Indice = hash_Nivel_2(chave);
+        tabela[primeiro_Indice][segundo_Indice].push_back(std::make_pair(chave, valor));
+    }
+
+};
+
+int main() {
+    Tabela_Hash tabela_Hash;
+
+    // Inserindo elementos
+    tabela_Hash.inserir(4, 40);
+    tabela_Hash.inserir(6, 60);
+    tabela_Hash.inserir(8, 80);
+
+    // Recuperando elementos
+    int valor_1 = tabela_Hash.encontrar(4);
+    int valor_2 = tabela_Hash.encontrar(6);
+    int valor_3 = tabela_Hash.encontrar(8);
+
+    if (valor_1 != -1) {
+        cout << "chave 4: " << valor_1 << endl;
+    } else {
+        cout << "chave 4 nao encontrada." << endl;
+    }
+
+    if (valor_2 != -1) {
+        cout << "chave 6: " << valor_2 << endl;
+    } else {
+        cout << "chave 6 nao encontrada." << endl;
+    }
+
+    if (valor_4 != -1) {
+        cout << "chave 8: " << valor_4 << endl;
+    } else {
+        cout << "chave 8 nao encontrada." << endl;
+    }
+
+    return 0;
+}
