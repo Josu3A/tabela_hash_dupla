@@ -1,0 +1,73 @@
+#include <list>
+#include <iostream>
+#include <vector>
+
+const int tamanho_Nivel_1 = 10;
+const int tamanho_Nivel_2 = 10;
+
+using std::cout;
+using std::endl;
+
+// Funcao hash para o nível 1
+int hash_Nivel_1(int chave) {
+    return chave % tamanho_Nivel_1;
+}
+
+// Funcao hash para o nível 2
+int hash_Nivel_2(int chave) {
+    return chave % tamanho_Nivel_2;
+}
+
+class Tabela_Hash {
+private:
+    std::vector<std::vector<std::list<int>>> tabela; 
+
+public:
+    Tabela_Hash() {
+        tabela.resize(tamanho_Nivel_1);
+        for (int i = 0; i < tamanho_Nivel_1; i++) {
+            tabela[i].resize(tamanho_Nivel_2);
+        }
+    }
+
+    bool buscar(int chave, int valor) {
+        int primeiro_Indice = hash_Nivel_1(chave);
+        int segundo_Indice = hash_Nivel_2(chave);
+        for (int item : tabela[primeiro_Indice][segundo_Indice]) {
+            if (item == valor) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    void inserir(int chave, int valor) {
+        int primeiro_Indice = hash_Nivel_1(chave);
+        int segundo_Indice = hash_Nivel_2(chave);
+        tabela[primeiro_Indice][segundo_Indice].push_back(valor);
+    }
+
+    void remover(int chave, int valor) {
+        int primeiro_Indice = hash_Nivel_1(chave);
+        int segundo_Indice = hash_Nivel_2(chave);
+        tabela[primeiro_Indice][segundo_Indice].remove(valor);
+    }
+};
+
+int main() {
+    Tabela_Hash tabela_Hash;
+
+    // Inserir elementos
+    tabela_Hash.inserir(4, 40);
+    tabela_Hash.inserir(6, 60);
+    tabela_Hash.inserir(8, 80);
+
+    // Verificar se um elemento esta na tabela
+    cout << "Encontrou 4: " << tabela_Hash.buscar(4, 40) << endl;
+
+    // Remover um elemento da tabela
+    tabela_Hash.remover(8, 80);
+    cout << "Encontrou 8 em seguida do remover: " << tabela_Hash.buscar(8, 80) << endl;
+
+    return 0;
+}
